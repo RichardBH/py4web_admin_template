@@ -1,0 +1,189 @@
+[[extend 'sidebarlayout.html']]
+
+[[block page_menu_items]]<!-- individual pages can add menu items here -->
+[[end]]
+
+[[block page_sidebaritems]]
+[[end]]
+
+
+
+
+                        <div class="row">
+                            <div class="column is-4 ">
+                                  <header class="card-header">
+                                    <p class="card-header-title">
+                                        <i class="fas fa-chart-area mr-1"></i>
+                                        Area Chart Example
+                                    </p>
+                                  </header>
+                                    <div class="card-content"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    <i class="fas fa-table mr-1"></i>
+                                    EQUIPMENT LIST
+                                </p>
+                            </header>
+                            <div class="card-content">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="eq-table" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>NAME</th>
+                                                <th>DESC</th>
+                                                <th>Current Batch</th>
+                                                <th>Choose product to start a Batch</th>
+                                                <th>CHART</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            [[ for object in org_eq: ]]
+                                                <tr>
+                                                    <td>[[ =object.f_name ]]</td>
+                                                    <td>[[ =object.f_desc ]]</td>
+                                                    <td>
+                                                        None
+                                                    </td>
+                                                    <td>
+
+                                                        <form enctype="multipart/form-data" action="[[=URL('Qualitiv','default','batch_new')]]" method="post">
+                                                            <input id="eq_id" name="eq_id" type="hidden" value="[[=object.id]]">
+                                                            <select id='pr_id' name='pr_id' >
+                                                                <option value="[[=0]]" [[=XML(" selected='selected'")]]>
+                                                                </option>
+                                                                [[for product in products:]]
+                                                                    <option value="[[=product.id]]">
+                                                                    [[=product.f_name]]</option>
+                                                                [[pass]]
+                                                            </select>
+                                                            <input type="datetime-local" id="startdate" name="startdate">
+                                                            <button type="submit" class="btn btn-success">
+                                                                <i class="fa fa-play"></i>[[=" Start Batch"]]
+                                                            </button>
+                                                        </form>
+
+                                                    </td>
+                                                    <td><a class="btn btn-primary" href="[[=URL('Qualitiv','default','batch_new')]]>
+                                                    <i class="fa fa-stop"></i>
+                                                    [[=" Stop"]]
+                                                    </a>
+                                                    </td>
+                                                </tr>
+                                            [[pass]]
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+  [[block page_scripts]]<!-- individual pages can add scripts here -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+
+    <script>
+    var now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('startdate').value = now.toISOString().slice(0,16);
+    </script>
+    <script>
+        // Set new default font family and font color to mimic Bootstrap's default styling
+    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#292b2c';
+
+    // Area Chart Example
+    var ctx = document.getElementById("myAreaChart");
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["Mar 1", "Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 7", "Mar 8", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13"],
+        datasets: [{
+          label: "Sessions",
+          lineTension: 0.3,
+          backgroundColor: "rgba(2,117,216,0.2)",
+          borderColor: "rgba(2,117,216,1)",
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(2,117,216,1)",
+          pointBorderColor: "rgba(255,255,255,0.8)",
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(2,117,216,1)",
+          pointHitRadius: 50,
+          pointBorderWidth: 2,
+          data: [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451],
+        }],
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            time: {
+              unit: 'date'
+            },
+            gridLines: {
+              display: false
+            },
+            ticks: {
+              maxTicksLimit: 7
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              min: 0,
+              max: 40000,
+              maxTicksLimit: 5
+            },
+            gridLines: {
+              color: "rgba(0, 0, 0, .125)",
+            }
+          }],
+        },
+        legend: {
+          display: false
+        }
+      }
+    });
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+  [[end]]

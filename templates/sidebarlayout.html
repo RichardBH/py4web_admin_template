@@ -1,0 +1,52 @@
+[[extend 'layout.html']]
+    [[block page_head]]<!-- individual pages can customize header here -->[[end]]
+
+<div class="container is-fluid">
+    <div class="columns is-fullheight">
+      <div class="column is-2 is-sidebar-menu is-hidden-mobile">
+        <!--<div style="background-color:#E0E0E0; overflow: auto;" class="clear_fix"> -->
+          <aside class="menu" >
+            [[if globals().get('user'):]]
+                <p class="menu-label">Core</p>
+                    <ul class="menu-list">
+                        <li><a [[if title=="Dashboard":]] class='is-active' [[pass]] href="[[=URL('dashboard')]]">
+                            <span class="icon"><i class="fas fa-tachometer-alt"></i></span> Dashboard</a></li>
+                    </ul>
+                <p class="menu-label"> Configuration</p>
+                    <ul class="menu-list">
+                        <li><a [[if title=="Equipment":]] class='is-active' [[pass]] href="[[=URL('equipment')]]">
+                            <span class="icon"><i class="fas fa-cogs"></i></span> Equipment</a></li>
+                        <li><a [[if title=="Products":]] class='is-active' [[pass]] class="nav-link" href="[[=URL('product')]]">
+                            <span class="icon"><i class="fas fa-cubes"></i></span> Products</a></li>
+                        <li><a [[if title=="Devices":]] class='is-active' [[pass]] class="nav-link" href="[[=URL('device')]]">
+                            <span class="icon"><i class="fas fa-cubes"></i></span> Devices</a></li>
+                    </ul>
+                 <p class="menu-label"> Reports</p>
+                    <ul class="menu-list">
+                    </ul>
+                 <p class="menu-label"> Administration</p>
+                 <ul class="menu-list">
+                  </ul>
+                  <p class="menu-label">
+                    Transactions
+                  </p>
+                  <ul class="menu-list">
+                    <li><a>Payments</a></li>
+                    <li><a>Transfers</a></li>
+                    <li><a>Balance</a></li>
+                  </ul>
+
+              [[block page_sidebaritems]]
+              [[end]]
+            [[pass]]
+          </aside>
+      </div>
+      <div class="column is-main-content">
+          <main>
+                [[ block page_title ]]<h1 class="title">[[=title or '']]</h1>[[end]]
+                [[ block page_subtitle ]]<h2 class="subtitle">[[=subtitle or '']]</h2>[[end]]
+                [[include]]
+          </main>
+      </div>
+    </div>
+</div>

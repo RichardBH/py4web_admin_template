@@ -1,0 +1,170 @@
+timestamp: 2020-07-22T13:22:08.801205
+CREATE TABLE "auth_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "username" CHAR(512) UNIQUE,
+    "email" CHAR(512) UNIQUE,
+    "password" CHAR(512),
+    "first_name" CHAR(512),
+    "last_name" CHAR(512),
+    "sso_id" CHAR(512),
+    "action_token" CHAR(512),
+    "last_password_change" TIMESTAMP,
+    "past_passwords_hash" TEXT
+);
+success!
+timestamp: 2020-07-22T13:22:08.812198
+CREATE TABLE "auth_user_tag_groups"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "path" CHAR(512),
+    "record_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-22T13:22:08.826190
+CREATE TABLE "t_org"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_name" CHAR(512),
+    "f_code" CHAR(512),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.848176
+CREATE TABLE "t_org_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_userid" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "f_org" INTEGER REFERENCES "t_org" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.854172
+CREATE TABLE "t_device"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_name" CHAR(512),
+    "f_code" CHAR(512),
+    "f_type" CHAR(512),
+    "f_org" INTEGER REFERENCES "t_org" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.860168
+CREATE TABLE "t_equipment"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_name" CHAR(512),
+    "f_desc" CHAR(512),
+    "f_org" INTEGER REFERENCES "t_org" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.870162
+CREATE TABLE "t_sensor"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_name" CHAR(512),
+    "f_type" CHAR(512),
+    "f_units" CHAR(512),
+    "f_code" CHAR(512),
+    "f_equipment" INTEGER REFERENCES "t_equipment" ("id") ON DELETE CASCADE  ,
+    "f_device" INTEGER REFERENCES "t_device" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.879157
+CREATE TABLE "t_samples"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_sensor" INTEGER REFERENCES "t_sensor" ("id") ON DELETE CASCADE  ,
+    "f_value" DOUBLE,
+    "f_timestamp" INTEGER,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.886153
+CREATE TABLE "t_product"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_name" CHAR(512),
+    "f_desc" CHAR(512),
+    "f_type" CHAR(512),
+    "f_org" INTEGER REFERENCES "t_org" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.892149
+CREATE TABLE "t_batch"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "f_product" INTEGER REFERENCES "t_product" ("id") ON DELETE CASCADE  ,
+    "f_equipment" INTEGER REFERENCES "t_equipment" ("id") ON DELETE CASCADE  ,
+    "f_start" TIMESTAMP,
+    "f_end" TIMESTAMP,
+    "f_serial" CHAR(512),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "is_active" CHAR(1)
+);
+success!
+timestamp: 2020-07-22T13:22:08.897146
+CREATE TABLE "person"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "job" CHAR(512),
+    "resume" TEXT
+);
+success!
+timestamp: 2020-07-22T13:22:08.903142
+CREATE TABLE "superhero"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "real_identity" INTEGER REFERENCES "person" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-07-22T13:22:08.909139
+CREATE TABLE "superpower"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "description" CHAR(512)
+);
+success!
+timestamp: 2020-07-22T13:22:08.914135
+CREATE TABLE "tag"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "superhero" INTEGER REFERENCES "superhero" ("id") ON DELETE CASCADE  ,
+    "superpower" INTEGER REFERENCES "superpower" ("id") ON DELETE CASCADE  ,
+    "strength" INTEGER
+);
+success!
+timestamp: 2020-07-22T13:22:08.925128
+CREATE TABLE "product"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "product_name" CHAR(512),
+    "product_quantity" INTEGER,
+    "product_cost" DOUBLE,
+    "mail_order" CHAR(1),
+    "created_by" CHAR(512),
+    "creation_date" TIMESTAMP
+);
+success!
