@@ -11,3 +11,6 @@ TODO:
 1. Multi Tenant capability
 2. Administration of users
 3. ...
+
+![](static/images/py4web_01.JPG)
+![](static/images/py4web_02.JPG)
